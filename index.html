@@ -67,13 +67,27 @@
     margin: 0 auto;
     padding: 24px 16px;
   }
+  .prize-section {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 24px;
+    margin-bottom: 24px;
+  }
+  .prize-gif {
+    width: 200px;
+    height: auto;
+    border-radius: 12px;
+    flex-shrink: 0;
+  }
   .prize-card {
     text-align: center;
     background: #2a0a3e;
     border: 1px solid #F5C542;
     border-radius: 12px;
     padding: 28px 20px;
-    margin-bottom: 24px;
+    flex: 1;
+    max-width: 500px;
   }
   .prize-amount {
     font-size: 52px;
@@ -409,6 +423,8 @@
   }
   @media (max-width: 480px) {
     .cta-btn { width: 100%; min-height: 48px; display: flex; align-items: center; justify-content: center; }
+    .prize-section { flex-direction: column; gap: 12px; }
+    .prize-gif { width: 160px; }
   }
 </style>
 </head>
@@ -423,22 +439,25 @@
 </header>
 
 <div class="main-content">
-  <div class="prize-card">
-    <div class="prize-amount">$100</div>
-    <div class="prize-label">Amazon Gift Voucher</div>
-    <div class="prize-date">Winner announced Friday 28 March at 5pm AEST</div>
+  <div class="prize-section">
+    <img src="/opti-prime.gif" alt="OptiPrime" class="prize-gif" />
+    <div class="prize-card">
+      <div class="prize-amount">AUD $100</div>
+      <div class="prize-label">Gift Voucher</div>
+      <div class="prize-date">Winner announced Friday 28 March at 5pm AEST</div>
+    </div>
   </div>
 
   <div class="rules-card">
     <h2>How it works</h2>
     <ol>
       <li>Submit bugs, issues or ideas via the form below</li>
-      <li>The person with the most submissions by Friday 5pm AEST wins the $100 Amazon voucher</li>
+      <li>The person with the most submissions by Friday 5pm AEST wins an AUD $100 gift voucher</li>
       <li>The prize only unlocks if the team hits 50 total submissions — so encourage your teammates!</li>
       <li>Only submissions via the OptiPrime feedback form count toward the leaderboard</li>
       <li>OptiPrime project team members are not eligible for the prize, but their submissions count toward the team goal</li>
     </ol>
-    <div class="rules-fine-print">In the event of a tie, the prize goes to whoever reached the tied score first.</div>
+    <div class="rules-fine-print">In the event of a tie, the prize goes to whoever reached the tied score first. Prize will be an Amazon or Prezee gift voucher (or equivalent), at the organiser's discretion.</div>
   </div>
 
   <div class="countdown-section">
@@ -562,7 +581,7 @@
 
     if (total >= TEAM_GOAL) {
       fill.classList.add('unlocked');
-      label.textContent = 'Prize unlocked! \u{1F389} The winner takes the $100';
+      label.textContent = 'Prize unlocked! \u{1F389} The winner takes AUD $100!';
     } else {
       fill.classList.remove('unlocked');
       label.textContent = 'Team goal: ' + total + ' / ' + TEAM_GOAL + ' \u2014 prize unlocks at ' + TEAM_GOAL + '!';
