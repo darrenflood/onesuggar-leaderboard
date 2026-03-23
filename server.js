@@ -6,6 +6,7 @@ const PORT = process.env.PORT || 3000;
 const CLICKUP_TOKEN = process.env.CLICKUP_TOKEN;
 const LIST_ID = '901613834407';
 const REPORTER_FIELD_ID = '750ab6c7-9365-4858-bfee-bf51c69cdbc7';
+const TEAM_MEMBERS = (process.env.TEAM_MEMBERS || '').split(',').map(s => s.trim()).filter(Boolean);
 
 app.use((req, res, next) => {
   res.setHeader('X-Content-Type-Options', 'nosniff');
@@ -57,16 +58,21 @@ app.get('/api/leaderboard', async (req, res) => {
       }
     }
 
-    const reporters = Object.entries(counts)
+    const allReporters = Object.entries(counts)
       .map(([name, count]) => ({ name, count }))
       .sort((a, b) => b.count - a.count);
 
-    const totalSubmissions = reporters.reduce((sum, r) => sum + r.count, 0);
+    const teamSet = new Set(TEAM_MEMBERS);
+    const reporters = allReporters.filter(r => !teamSet.has(r.name));
+    const teamReporters = allReporters.filter(r => teamSet.has(r.name));
+
+    const totalSubmissions = allReporters.reduce((sum, r) => sum + r.count, 0);
 
     res.json({
       updatedAt: new Date().toISOString(),
       totalSubmissions,
-      reporters
+      reporters,
+      teamReporters
     });
   } catch (err) {
     console.error('Leaderboard fetch error:', err.message);

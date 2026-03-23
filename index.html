@@ -335,6 +335,19 @@
     font-size: 0.75rem;
     color: #5a3d7a;
   }
+  .team-section {
+    opacity: 0.85;
+  }
+  .team-section .leaderboard-header {
+    font-size: 0.75rem;
+  }
+  .team-section .leaderboard-header .not-eligible {
+    font-weight: 400;
+    font-style: italic;
+    text-transform: none;
+    letter-spacing: 0;
+  }
+  .team-section .bar-fill { background: linear-gradient(90deg, #6b4f8a, #8a6cb0); }
   .empty-state {
     text-align: center;
     padding: 40px 20px;
@@ -423,6 +436,7 @@
       <li>The person with the most submissions by Friday 5pm AEST wins the $100 Amazon voucher</li>
       <li>The prize only unlocks if the team hits 50 total submissions — so encourage your teammates!</li>
       <li>Only submissions via the OptiPrime feedback form count toward the leaderboard</li>
+      <li>OptiPrime project team members are not eligible for the prize, but their submissions count toward the team goal</li>
     </ol>
     <div class="rules-fine-print">In the event of a tie, the prize goes to whoever reached the tied score first.</div>
   </div>
@@ -458,6 +472,16 @@
     </div>
     <div id="rows">
       <div class="loading"><div class="loading-spinner"></div><br>Loading leaderboard&hellip;</div>
+    </div>
+  </div>
+
+  <div class="team-section">
+    <div class="leaderboard">
+      <div class="leaderboard-header">
+        <span>OptiPrime Project Team</span>
+        <span class="not-eligible">not eligible for prize</span>
+      </div>
+      <div id="team-rows"></div>
     </div>
   </div>
 
@@ -616,6 +640,30 @@
     });
   }
 
+  function renderTeamRows(teamReporters) {
+    var container = document.getElementById('team-rows');
+    if (!teamReporters || teamReporters.length === 0) {
+      container.innerHTML = '<div class="empty-state" style="padding:20px;font-size:0.85rem;">No team submissions yet</div>';
+      return;
+    }
+    var maxCount = teamReporters[0].count;
+    var html = '';
+    teamReporters.forEach(function(r) {
+      var pct = (r.count / maxCount) * 100;
+      html += '<div class="row">' +
+        '<div class="name-col">' + escapeHtml(r.name) + '</div>' +
+        '<div class="bar-col"><div class="bar-track"><div class="bar-fill" data-pct="' + pct + '"></div></div></div>' +
+        '<div class="count">' + r.count + '</div>' +
+        '</div>';
+    });
+    container.innerHTML = html;
+    requestAnimationFrame(function() {
+      container.querySelectorAll('.bar-fill').forEach(function(bar) {
+        bar.style.width = bar.dataset.pct + '%';
+      });
+    });
+  }
+
   function escapeHtml(str) {
     const d = document.createElement('div');
     d.textContent = str;
@@ -635,8 +683,10 @@
 
       animateTotal(data.totalSubmissions);
       updateTeamProgress(data.totalSubmissions);
-      document.getElementById('contributors').textContent = 'logged by ' + data.reporters.length + ' contributors';
+      var totalContributors = data.reporters.length + (data.teamReporters ? data.teamReporters.length : 0);
+      document.getElementById('contributors').textContent = 'logged by ' + totalContributors + ' contributors';
       renderRows(data.reporters, isFirstLoad);
+      renderTeamRows(data.teamReporters || []);
       document.getElementById('last-updated').textContent = formatTime(data.updatedAt);
       isFirstLoad = false;
     } catch (err) {
