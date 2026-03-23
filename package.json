@@ -1,0 +1,12 @@
+{
+  "name": "onesuggar-leaderboard",
+  "version": "1.0.0",
+  "description": "Live leaderboard for 1Sugar UAT Feedback Sprint",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "express": "^4.21.0"
+  }
+}

@@ -1,0 +1,495 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>1Sugar UAT — Feedback Sprint Leaderboard</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    background: #0f0520;
+    color: #e0d6f0;
+    min-height: 100vh;
+  }
+  header {
+    background: #1a0a2e;
+    padding: 20px 24px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 12px;
+    border-bottom: 2px solid #2d1650;
+  }
+  .header-left {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+  }
+  .header-left h1 {
+    font-size: 1.4rem;
+    color: #fff;
+    font-weight: 700;
+  }
+  .live-badge {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: #4ade80;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+  }
+  .live-dot {
+    width: 8px;
+    height: 8px;
+    background: #4ade80;
+    border-radius: 50%;
+    animation: pulse 2s ease-in-out infinite;
+  }
+  @keyframes pulse {
+    0%, 100% { opacity: 1; box-shadow: 0 0 0 0 rgba(74, 222, 128, 0.7); }
+    50% { opacity: 0.7; box-shadow: 0 0 0 6px rgba(74, 222, 128, 0); }
+  }
+  .prize-badge {
+    background: linear-gradient(135deg, #F5C542, #e6a817);
+    color: #1a0a2e;
+    padding: 8px 16px;
+    border-radius: 20px;
+    font-weight: 700;
+    font-size: 0.85rem;
+    white-space: nowrap;
+  }
+  .main-content {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 24px 16px;
+  }
+  .countdown-section {
+    text-align: center;
+    margin-bottom: 28px;
+  }
+  .countdown-label {
+    font-size: 0.85rem;
+    color: #a78bcc;
+    margin-bottom: 8px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+  }
+  .countdown {
+    display: flex;
+    justify-content: center;
+    gap: 12px;
+  }
+  .countdown-unit {
+    background: #1a0a2e;
+    border: 1px solid #2d1650;
+    border-radius: 10px;
+    padding: 12px 16px;
+    min-width: 70px;
+    text-align: center;
+  }
+  .countdown-value {
+    font-size: 1.8rem;
+    font-weight: 800;
+    color: #F5C542;
+    font-variant-numeric: tabular-nums;
+  }
+  .countdown-unit-label {
+    font-size: 0.65rem;
+    color: #8a6cb0;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-top: 2px;
+  }
+  .total-section {
+    text-align: center;
+    margin-bottom: 28px;
+  }
+  .total-label {
+    font-size: 0.85rem;
+    color: #a78bcc;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+  }
+  .total-number {
+    font-size: 3.5rem;
+    font-weight: 900;
+    color: #fff;
+    font-variant-numeric: tabular-nums;
+    transition: transform 0.3s ease;
+  }
+  .total-number.bump {
+    transform: scale(1.15);
+  }
+  .total-sub {
+    font-size: 0.85rem;
+    color: #8a6cb0;
+  }
+  .leaderboard {
+    background: #1a0a2e;
+    border-radius: 12px;
+    border: 1px solid #2d1650;
+    overflow: hidden;
+    margin-bottom: 24px;
+  }
+  .leaderboard-header {
+    padding: 14px 20px;
+    font-size: 0.8rem;
+    color: #8a6cb0;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    border-bottom: 1px solid #2d1650;
+    display: flex;
+    justify-content: space-between;
+  }
+  .row {
+    display: flex;
+    align-items: center;
+    padding: 14px 20px;
+    border-bottom: 1px solid #1e0e35;
+    gap: 12px;
+    transition: background 0.2s;
+  }
+  .row:last-child { border-bottom: none; }
+  .row:hover { background: #22103a; }
+  .rank {
+    font-size: 1.1rem;
+    font-weight: 700;
+    min-width: 36px;
+    text-align: center;
+    color: #8a6cb0;
+  }
+  .rank-1 .rank { color: #F5C542; }
+  .rank-2 .rank { color: #C0C0C0; }
+  .rank-3 .rank { color: #CD7F32; }
+  .medal {
+    font-size: 1.3rem;
+    min-width: 28px;
+    text-align: center;
+  }
+  .name-col {
+    min-width: 120px;
+    font-weight: 600;
+    color: #fff;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    flex-shrink: 0;
+  }
+  .rank-arrow {
+    font-size: 0.75rem;
+    font-weight: 700;
+    opacity: 1;
+    transition: opacity 0.5s ease;
+  }
+  .rank-arrow.up { color: #4ade80; }
+  .rank-arrow.down { color: #f87171; }
+  .rank-arrow.fade { opacity: 0; }
+  .bar-col {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .bar-track {
+    flex: 1;
+    height: 24px;
+    background: #0f0520;
+    border-radius: 6px;
+    overflow: hidden;
+  }
+  .bar-fill {
+    height: 100%;
+    border-radius: 6px;
+    width: 0%;
+    transition: width 0.9s cubic-bezier(0.22, 1, 0.36, 1);
+  }
+  .rank-1 .bar-fill { background: linear-gradient(90deg, #F5C542, #ffd966); }
+  .rank-2 .bar-fill { background: linear-gradient(90deg, #C0C0C0, #d9d9d9); }
+  .rank-3 .bar-fill { background: linear-gradient(90deg, #CD7F32, #e0954a); }
+  .bar-fill.default { background: linear-gradient(90deg, #E8894A, #f0a06a); }
+  .count {
+    font-weight: 800;
+    font-size: 1.1rem;
+    min-width: 36px;
+    text-align: right;
+    font-variant-numeric: tabular-nums;
+    color: #fff;
+  }
+  .cta-section {
+    text-align: center;
+    margin-bottom: 24px;
+  }
+  .cta-btn {
+    display: inline-block;
+    background: linear-gradient(135deg, #E8894A, #d4732e);
+    color: #fff;
+    text-decoration: none;
+    padding: 16px 32px;
+    border-radius: 10px;
+    font-weight: 700;
+    font-size: 1.1rem;
+    transition: transform 0.15s ease, box-shadow 0.15s ease;
+    box-shadow: 0 4px 16px rgba(232, 137, 74, 0.3);
+  }
+  .cta-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 24px rgba(232, 137, 74, 0.45);
+  }
+  .footer {
+    text-align: right;
+    padding: 0 4px;
+    font-size: 0.75rem;
+    color: #5a3d7a;
+  }
+  .empty-state {
+    text-align: center;
+    padding: 40px 20px;
+    color: #8a6cb0;
+  }
+  .loading {
+    text-align: center;
+    padding: 40px 20px;
+    color: #8a6cb0;
+  }
+  .loading-spinner {
+    display: inline-block;
+    width: 28px;
+    height: 28px;
+    border: 3px solid #2d1650;
+    border-top-color: #F5C542;
+    border-radius: 50%;
+    animation: spin 0.8s linear infinite;
+    margin-bottom: 12px;
+  }
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  @media (max-width: 600px) {
+    header { padding: 14px 16px; }
+    .header-left h1 { font-size: 1.1rem; }
+    .prize-badge { font-size: 0.75rem; padding: 6px 12px; }
+    .countdown-unit { min-width: 56px; padding: 8px 10px; }
+    .countdown-value { font-size: 1.4rem; }
+    .total-number { font-size: 2.5rem; }
+    .name-col { min-width: 80px; font-size: 0.85rem; }
+    .row { padding: 10px 14px; gap: 8px; }
+    .rank { min-width: 28px; font-size: 0.95rem; }
+    .medal { min-width: 22px; font-size: 1.1rem; }
+    .count { font-size: 0.95rem; min-width: 28px; }
+    .cta-btn { padding: 14px 24px; font-size: 1rem; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="header-left">
+    <h1>1Sugar UAT — Feedback Sprint &#127942;</h1>
+    <div class="live-badge"><span class="live-dot"></span> LIVE</div>
+  </div>
+  <div class="prize-badge">&#127873; $100 Amazon voucher — most submissions wins</div>
+</header>
+
+<div class="main-content">
+  <div class="countdown-section">
+    <div class="countdown-label">Sprint ends in</div>
+    <div class="countdown">
+      <div class="countdown-unit"><div class="countdown-value" id="cd-days">--</div><div class="countdown-unit-label">Days</div></div>
+      <div class="countdown-unit"><div class="countdown-value" id="cd-hours">--</div><div class="countdown-unit-label">Hours</div></div>
+      <div class="countdown-unit"><div class="countdown-value" id="cd-mins">--</div><div class="countdown-unit-label">Mins</div></div>
+      <div class="countdown-unit"><div class="countdown-value" id="cd-secs">--</div><div class="countdown-unit-label">Secs</div></div>
+    </div>
+  </div>
+
+  <div class="total-section">
+    <div class="total-label">Total Submissions</div>
+    <div class="total-number" id="total-count">0</div>
+    <div class="total-sub">bugs &amp; feedback logged</div>
+  </div>
+
+  <div class="leaderboard" id="leaderboard">
+    <div class="leaderboard-header">
+      <span>Leaderboard</span>
+      <span>Submissions</span>
+    </div>
+    <div id="rows">
+      <div class="loading"><div class="loading-spinner"></div><br>Loading leaderboard&hellip;</div>
+    </div>
+  </div>
+
+  <div class="cta-section">
+    <a href="https://forms.clickup.com/36750537/f/131h69-76316/A6F5JTI7H098AO092O" target="_blank" rel="noopener" class="cta-btn">Log a bug or feedback &#8594;</a>
+  </div>
+
+  <div class="footer">
+    Last updated: <span id="last-updated">—</span>
+  </div>
+</div>
+
+<script>
+(function() {
+  // Countdown — Friday 28 March 2026 17:00 AEST (UTC+11 for AEDT, but AEST is UTC+10)
+  // March 28 2026 is during AEDT (daylight saving ends first Sunday of April)
+  // AEDT = UTC+11, so 17:00 AEDT = 06:00 UTC
+  const DEADLINE = new Date('2026-03-28T06:00:00Z');
+
+  function updateCountdown() {
+    const now = new Date();
+    let diff = DEADLINE - now;
+    if (diff < 0) diff = 0;
+
+    const days = Math.floor(diff / 86400000);
+    const hours = Math.floor((diff % 86400000) / 3600000);
+    const mins = Math.floor((diff % 3600000) / 60000);
+    const secs = Math.floor((diff % 60000) / 1000);
+
+    document.getElementById('cd-days').textContent = String(days).padStart(2, '0');
+    document.getElementById('cd-hours').textContent = String(hours).padStart(2, '0');
+    document.getElementById('cd-mins').textContent = String(mins).padStart(2, '0');
+    document.getElementById('cd-secs').textContent = String(secs).padStart(2, '0');
+  }
+  updateCountdown();
+  setInterval(updateCountdown, 1000);
+
+  // Leaderboard
+  let previousRanks = {};
+  let currentTotal = 0;
+  let isFirstLoad = true;
+
+  function animateTotal(target) {
+    const el = document.getElementById('total-count');
+    const start = currentTotal;
+    if (start === target) return;
+    const duration = 600;
+    const startTime = performance.now();
+
+    function tick(now) {
+      const elapsed = now - startTime;
+      const progress = Math.min(elapsed / duration, 1);
+      const eased = 1 - Math.pow(1 - progress, 3);
+      const val = Math.round(start + (target - start) * eased);
+      el.textContent = val;
+      if (progress < 1) {
+        requestAnimationFrame(tick);
+      } else {
+        el.textContent = target;
+        currentTotal = target;
+      }
+    }
+
+    el.classList.add('bump');
+    setTimeout(() => el.classList.remove('bump'), 300);
+    requestAnimationFrame(tick);
+  }
+
+  function getMedal(rank) {
+    if (rank === 1) return '\u{1F947}';
+    if (rank === 2) return '\u{1F948}';
+    if (rank === 3) return '\u{1F949}';
+    return '';
+  }
+
+  function renderRows(reporters, animate) {
+    const container = document.getElementById('rows');
+    const maxCount = reporters.length > 0 ? reporters[0].count : 1;
+    const newRanks = {};
+
+    reporters.forEach((r, i) => { newRanks[r.name] = i + 1; });
+
+    let html = '';
+    reporters.forEach((r, i) => {
+      const rank = i + 1;
+      const pct = (r.count / maxCount) * 100;
+      const medal = getMedal(rank);
+      const rankClass = rank <= 3 ? 'rank-' + rank : '';
+      const barClass = rank > 3 ? 'default' : '';
+
+      let arrow = '';
+      if (!isFirstLoad && previousRanks[r.name] !== undefined) {
+        const prevRank = previousRanks[r.name];
+        if (prevRank > rank) {
+          arrow = '<span class="rank-arrow up" data-arrow>&#8593;</span>';
+        } else if (prevRank < rank) {
+          arrow = '<span class="rank-arrow down" data-arrow>&#8595;</span>';
+        }
+      }
+
+      html += '<div class="row ' + rankClass + '" style="' + (animate ? 'opacity:0;transform:translateY(8px);' : '') + '">' +
+        '<div class="rank">' + rank + '</div>' +
+        '<div class="medal">' + medal + '</div>' +
+        '<div class="name-col">' + escapeHtml(r.name) + arrow + '</div>' +
+        '<div class="bar-col"><div class="bar-track"><div class="bar-fill ' + barClass + '" data-pct="' + pct + '"></div></div></div>' +
+        '<div class="count">' + r.count + '</div>' +
+        '</div>';
+    });
+
+    if (reporters.length === 0) {
+      html = '<div class="empty-state">No submissions yet. Be the first!</div>';
+    }
+
+    container.innerHTML = html;
+    previousRanks = newRanks;
+
+    // Animate bars and rows
+    requestAnimationFrame(() => {
+      const rows = container.querySelectorAll('.row');
+      rows.forEach((row, i) => {
+        const delay = animate ? i * 150 : 0;
+        setTimeout(() => {
+          if (animate) {
+            row.style.transition = 'opacity 0.4s ease, transform 0.4s ease';
+            row.style.opacity = '1';
+            row.style.transform = 'translateY(0)';
+          }
+          const bar = row.querySelector('.bar-fill');
+          if (bar) {
+            bar.style.width = bar.dataset.pct + '%';
+          }
+        }, delay);
+      });
+
+      // Fade out arrows after 4s
+      setTimeout(() => {
+        container.querySelectorAll('[data-arrow]').forEach(a => a.classList.add('fade'));
+      }, 4000);
+    });
+  }
+
+  function escapeHtml(str) {
+    const d = document.createElement('div');
+    d.textContent = str;
+    return d.innerHTML;
+  }
+
+  function formatTime(iso) {
+    const d = new Date(iso);
+    return d.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' });
+  }
+
+  async function fetchLeaderboard() {
+    try {
+      const res = await fetch('/api/leaderboard');
+      if (!res.ok) throw new Error('API error');
+      const data = await res.json();
+
+      animateTotal(data.totalSubmissions);
+      renderRows(data.reporters, isFirstLoad);
+      document.getElementById('last-updated').textContent = formatTime(data.updatedAt);
+      isFirstLoad = false;
+    } catch (err) {
+      console.error('Failed to fetch leaderboard:', err);
+      if (isFirstLoad) {
+        document.getElementById('rows').innerHTML = '<div class="empty-state">Failed to load data. Retrying&hellip;</div>';
+      }
+    }
+  }
+
+  fetchLeaderboard();
+  setInterval(fetchLeaderboard, 60000);
+})();
+</script>
+</body>
+</html>
