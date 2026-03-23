@@ -4,29 +4,37 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>OptiPrime — Feedback Sprint</title>
-<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16'%3E%3Crect width='16' height='16' rx='2' fill='%231a0a2e'/%3E%3Ctext x='8' y='12' text-anchor='middle' font-family='sans-serif' font-size='10' font-weight='bold' fill='white'%3EOP%3C/text%3E%3C/svg%3E">
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16'%3E%3Crect width='16' height='16' rx='2' fill='%23280265'/%3E%3Ctext x='8' y='12' text-anchor='middle' font-family='sans-serif' font-size='10' font-weight='bold' fill='white'%3EOP%3C/text%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800;900&display=swap" rel="stylesheet">
 <style>
   * { margin: 0; padding: 0; box-sizing: border-box; }
   body {
-    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-    background: #0f0520;
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    background: #1a0833;
     color: #e0d6f0;
     min-height: 100vh;
   }
   header {
-    background: #1a0a2e;
+    background: #280265;
     padding: 20px 24px;
     display: flex;
     align-items: center;
     justify-content: space-between;
     flex-wrap: wrap;
     gap: 12px;
-    border-bottom: 2px solid #2d1650;
+    border-bottom: 2px solid #3a1878;
   }
   .header-left {
     display: flex;
     align-items: center;
     gap: 16px;
+  }
+  .header-logo {
+    height: 28px;
+    width: auto;
+    opacity: 0.9;
   }
   .header-left h1 {
     font-size: 1.4rem;
@@ -39,24 +47,25 @@
     gap: 6px;
     font-size: 0.75rem;
     font-weight: 600;
-    color: #4ade80;
+    color: #34d399;
     text-transform: uppercase;
     letter-spacing: 1px;
   }
   .live-dot {
     width: 8px;
     height: 8px;
-    background: #4ade80;
+    background: #34d399;
     border-radius: 50%;
     animation: pulse 2s ease-in-out infinite;
   }
   @keyframes pulse {
-    0%, 100% { opacity: 1; box-shadow: 0 0 0 0 rgba(74, 222, 128, 0.7); }
-    50% { opacity: 0.7; box-shadow: 0 0 0 6px rgba(74, 222, 128, 0); }
+    0%, 100% { opacity: 1; box-shadow: 0 0 0 0 rgba(52, 211, 153, 0.7); }
+    50% { opacity: 0.7; box-shadow: 0 0 0 6px rgba(52, 211, 153, 0); }
   }
   .prize-badge {
-    background: linear-gradient(135deg, #F5C542, #e6a817);
-    color: #1a0a2e;
+    background: transparent;
+    color: #F5C542;
+    border: 2px solid #F5C542;
     padding: 8px 16px;
     border-radius: 20px;
     font-weight: 700;
@@ -85,8 +94,8 @@
     gap: 12px;
   }
   .countdown-unit {
-    background: #1a0a2e;
-    border: 1px solid #2d1650;
+    background: #280265;
+    border: 1px solid #3a1878;
     border-radius: 10px;
     padding: 12px 16px;
     min-width: 70px;
@@ -130,9 +139,9 @@
     color: #8a6cb0;
   }
   .leaderboard {
-    background: #1a0a2e;
+    background: #280265;
     border-radius: 12px;
-    border: 1px solid #2d1650;
+    border: 1px solid #3a1878;
     overflow: hidden;
     margin-bottom: 24px;
   }
@@ -142,7 +151,7 @@
     color: #8a6cb0;
     text-transform: uppercase;
     letter-spacing: 1px;
-    border-bottom: 1px solid #2d1650;
+    border-bottom: 1px solid #3a1878;
     display: flex;
     justify-content: space-between;
   }
@@ -150,12 +159,12 @@
     display: flex;
     align-items: center;
     padding: 14px 20px;
-    border-bottom: 1px solid #1e0e35;
+    border-bottom: 1px solid #2e1260;
     gap: 12px;
     transition: background 0.2s;
   }
   .row:last-child { border-bottom: none; }
-  .row:hover { background: #22103a; }
+  .row:hover { background: #321470; }
   .rank {
     font-size: 1.1rem;
     font-weight: 700;
@@ -186,7 +195,7 @@
     opacity: 1;
     transition: opacity 0.5s ease;
   }
-  .rank-arrow.up { color: #4ade80; }
+  .rank-arrow.up { color: #34d399; }
   .rank-arrow.down { color: #f87171; }
   .rank-arrow.fade { opacity: 0; }
   .bar-col {
@@ -198,7 +207,7 @@
   .bar-track {
     flex: 1;
     height: 24px;
-    background: #0f0520;
+    background: #1a0833;
     border-radius: 6px;
     overflow: hidden;
   }
@@ -226,19 +235,20 @@
   }
   .cta-btn {
     display: inline-block;
-    background: linear-gradient(135deg, #E8894A, #d4732e);
+    background: #E8894A;
     color: #fff;
     text-decoration: none;
     padding: 16px 32px;
     border-radius: 10px;
     font-weight: 700;
     font-size: 1.1rem;
-    transition: transform 0.15s ease, box-shadow 0.15s ease;
-    box-shadow: 0 4px 16px rgba(232, 137, 74, 0.3);
+    transition: transform 0.15s ease, box-shadow 0.15s ease, background 0.15s ease;
+    box-shadow: 0 4px 16px rgba(232, 137, 74, 0.25);
   }
   .cta-btn:hover {
     transform: translateY(-2px);
-    box-shadow: 0 6px 24px rgba(232, 137, 74, 0.45);
+    background: #d4732e;
+    box-shadow: 0 6px 24px rgba(232, 137, 74, 0.4);
   }
   .footer {
     text-align: right;
@@ -273,13 +283,26 @@
     text-align: center;
     font-size: 0.7rem;
     color: #4a2d6e;
-    padding: 12px 4px 24px;
+    padding: 12px 4px 8px;
+  }
+  .powered-by {
+    text-align: center;
+    font-size: 0.7rem;
+    color: #4a2d6e;
+    padding: 0 4px 24px;
+  }
+  .powered-by a {
+    color: #6b4f8a;
+    text-decoration: none;
+  }
+  .powered-by a:hover {
+    color: #a78bcc;
   }
   .loading-spinner {
     display: inline-block;
     width: 28px;
     height: 28px;
-    border: 3px solid #2d1650;
+    border: 3px solid #3a1878;
     border-top-color: #F5C542;
     border-radius: 50%;
     animation: spin 0.8s linear infinite;
@@ -311,6 +334,7 @@
 
 <header>
   <div class="header-left">
+    <svg class="header-logo" viewBox="0 0 200 46" xmlns="http://www.w3.org/2000/svg"><text x="0" y="35" font-family="Inter, sans-serif" font-size="32" font-weight="800" fill="white" letter-spacing="-1">optimate<tspan fill="#F5C542">.me</tspan></text></svg>
     <h1>OptiPrime — Feedback Sprint &#127942;</h1>
     <div class="live-badge"><span class="live-dot"></span> LIVE</div>
   </div>
@@ -354,6 +378,7 @@
   </div>
 
   <div class="footer-note">Leaderboard refreshes every 60 seconds &middot; Submissions close Friday 28 March 5pm AEST</div>
+  <div class="powered-by">Powered by <a href="https://www.optimate.me" target="_blank" rel="noopener">Optimate.me</a></div>
 </div>
 
 <script>
