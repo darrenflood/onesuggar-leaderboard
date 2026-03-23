@@ -62,20 +62,63 @@
     0%, 100% { opacity: 1; box-shadow: 0 0 0 0 rgba(52, 211, 153, 0.7); }
     50% { opacity: 0.7; box-shadow: 0 0 0 6px rgba(52, 211, 153, 0); }
   }
-  .prize-badge {
-    background: transparent;
-    color: #F5C542;
-    border: 2px solid #F5C542;
-    padding: 8px 16px;
-    border-radius: 20px;
-    font-weight: 700;
-    font-size: 0.85rem;
-    white-space: nowrap;
-  }
   .main-content {
     max-width: 800px;
     margin: 0 auto;
     padding: 24px 16px;
+  }
+  .prize-card {
+    text-align: center;
+    background: #2a0a3e;
+    border: 1px solid #F5C542;
+    border-radius: 12px;
+    padding: 28px 20px;
+    margin-bottom: 24px;
+  }
+  .prize-amount {
+    font-size: 52px;
+    font-weight: 900;
+    color: #F5C542;
+    line-height: 1.1;
+  }
+  .prize-label {
+    font-size: 20px;
+    font-weight: 700;
+    color: #fff;
+    margin-top: 4px;
+  }
+  .prize-date {
+    font-size: 0.8rem;
+    color: #8a6cb0;
+    margin-top: 8px;
+  }
+  .rules-card {
+    background: #280265;
+    border: 1px solid #3a1878;
+    border-radius: 12px;
+    padding: 20px 24px;
+    margin-bottom: 24px;
+  }
+  .rules-card h2 {
+    font-size: 1rem;
+    font-weight: 700;
+    color: #fff;
+    margin-bottom: 12px;
+  }
+  .rules-card ol {
+    padding-left: 20px;
+    color: #c4b5d9;
+    font-size: 0.85rem;
+    line-height: 1.7;
+  }
+  .rules-card ol li {
+    padding-left: 4px;
+  }
+  .rules-fine-print {
+    font-size: 0.7rem;
+    color: #6b4f8a;
+    font-style: italic;
+    margin-top: 12px;
   }
   .countdown-section {
     text-align: center;
@@ -114,6 +157,32 @@
     letter-spacing: 1px;
     margin-top: 2px;
   }
+  .team-progress {
+    margin-bottom: 28px;
+  }
+  .team-progress-label {
+    font-size: 0.85rem;
+    color: #a78bcc;
+    margin-bottom: 8px;
+    text-align: center;
+  }
+  .team-progress-track {
+    height: 28px;
+    background: #280265;
+    border: 1px solid #3a1878;
+    border-radius: 8px;
+    overflow: hidden;
+  }
+  .team-progress-fill {
+    height: 100%;
+    border-radius: 7px;
+    background: #E8894A;
+    width: 0%;
+    transition: width 0.9s cubic-bezier(0.22, 1, 0.36, 1), background 0.5s ease;
+  }
+  .team-progress-fill.unlocked {
+    background: #34d399;
+  }
   .total-section {
     text-align: center;
     margin-bottom: 28px;
@@ -137,6 +206,11 @@
   .total-sub {
     font-size: 0.85rem;
     color: #8a6cb0;
+  }
+  .contributors {
+    font-size: 0.85rem;
+    color: #8a6cb0;
+    margin-top: 2px;
   }
   .leaderboard {
     background: #280265;
@@ -233,6 +307,11 @@
     text-align: center;
     margin-bottom: 24px;
   }
+  .cta-helper {
+    font-size: 12px;
+    color: #6b4f8a;
+    margin-bottom: 10px;
+  }
   .cta-btn {
     display: inline-block;
     background: #E8894A;
@@ -255,16 +334,6 @@
     padding: 0 4px;
     font-size: 0.75rem;
     color: #5a3d7a;
-  }
-  .nudge {
-    font-size: 12px;
-    color: #6b4f8a;
-    padding: 2px 20px 0 96px;
-  }
-  .contributors {
-    font-size: 0.85rem;
-    color: #8a6cb0;
-    margin-top: 2px;
   }
   .empty-state {
     text-align: center;
@@ -313,7 +382,6 @@
   @media (max-width: 600px) {
     header { padding: 14px 16px; }
     .header-left h1 { font-size: 1.1rem; }
-    .prize-badge { font-size: 0.75rem; padding: 6px 12px; }
     .countdown-unit { min-width: 56px; padding: 8px 10px; }
     .countdown-value { font-size: 1.4rem; }
     .total-number { font-size: 2.5rem; }
@@ -323,7 +391,8 @@
     .medal { min-width: 22px; font-size: 1.1rem; }
     .count { font-size: 0.95rem; min-width: 28px; }
     .cta-btn { padding: 14px 24px; font-size: 1rem; }
-    .nudge { padding-left: 66px; }
+    .prize-amount { font-size: 40px; }
+    .prize-label { font-size: 16px; }
   }
   @media (max-width: 480px) {
     .cta-btn { width: 100%; min-height: 48px; display: flex; align-items: center; justify-content: center; }
@@ -338,10 +407,26 @@
     <h1>OptiPrime — Feedback Sprint &#127942;</h1>
     <div class="live-badge"><span class="live-dot"></span> LIVE</div>
   </div>
-  <div class="prize-badge">&#127873; Submit bugs, squash issues, win $100 — every submission counts</div>
 </header>
 
 <div class="main-content">
+  <div class="prize-card">
+    <div class="prize-amount">$100</div>
+    <div class="prize-label">Amazon Gift Voucher</div>
+    <div class="prize-date">Winner announced Friday 28 March at 5pm AEST</div>
+  </div>
+
+  <div class="rules-card">
+    <h2>How it works</h2>
+    <ol>
+      <li>Submit bugs, issues or ideas via the form below</li>
+      <li>The person with the most submissions by Friday 5pm AEST wins the $100 Amazon voucher</li>
+      <li>The prize only unlocks if the team hits 50 total submissions — so encourage your teammates!</li>
+      <li>Only submissions via the OptiPrime feedback form count toward the leaderboard</li>
+    </ol>
+    <div class="rules-fine-print">In the event of a tie, the prize goes to whoever reached the tied score first.</div>
+  </div>
+
   <div class="countdown-section">
     <div class="countdown-label">Sprint ends in</div>
     <div class="countdown">
@@ -349,6 +434,13 @@
       <div class="countdown-unit"><div class="countdown-value" id="cd-hours">--</div><div class="countdown-unit-label">Hours</div></div>
       <div class="countdown-unit"><div class="countdown-value" id="cd-mins">--</div><div class="countdown-unit-label">Mins</div></div>
       <div class="countdown-unit"><div class="countdown-value" id="cd-secs">--</div><div class="countdown-unit-label">Secs</div></div>
+    </div>
+  </div>
+
+  <div class="team-progress">
+    <div class="team-progress-label" id="team-label">Team goal: 0 / 50 — prize unlocks at 50!</div>
+    <div class="team-progress-track">
+      <div class="team-progress-fill" id="team-fill"></div>
     </div>
   </div>
 
@@ -370,7 +462,8 @@
   </div>
 
   <div class="cta-section">
-    <a href="https://forms.clickup.com/36750537/f/131h69-76316/A6F5JTI7H098AO092O" target="_blank" rel="noopener" class="cta-btn">Log a bug or feedback &#8594;</a>
+    <div class="cta-helper">Only submissions via this form count toward the leaderboard</div>
+    <a href="https://forms.clickup.com/36750537/f/131h69-76316/A6F5JTI7H098AO092O" target="_blank" rel="noopener" class="cta-btn">Log a bug, issue or idea &#8594;</a>
   </div>
 
   <div class="footer">
@@ -383,10 +476,8 @@
 
 <script>
 (function() {
-  // Countdown — Friday 28 March 2026 17:00 AEST (UTC+11 for AEDT, but AEST is UTC+10)
-  // March 28 2026 is during AEDT (daylight saving ends first Sunday of April)
-  // AEDT = UTC+11, so 17:00 AEDT = 06:00 UTC
   const DEADLINE = new Date('2026-03-28T06:00:00Z');
+  const TEAM_GOAL = 50;
 
   function updateCountdown() {
     const now = new Date();
@@ -406,7 +497,6 @@
   updateCountdown();
   setInterval(updateCountdown, 1000);
 
-  // Leaderboard
   let previousRanks = {};
   let currentTotal = 0;
   let isFirstLoad = true;
@@ -435,6 +525,24 @@
     el.classList.add('bump');
     setTimeout(() => el.classList.remove('bump'), 300);
     requestAnimationFrame(tick);
+  }
+
+  function updateTeamProgress(total) {
+    var fill = document.getElementById('team-fill');
+    var label = document.getElementById('team-label');
+    var pct = Math.min((total / TEAM_GOAL) * 100, 100);
+
+    requestAnimationFrame(function() {
+      fill.style.width = pct + '%';
+    });
+
+    if (total >= TEAM_GOAL) {
+      fill.classList.add('unlocked');
+      label.textContent = 'Prize unlocked! \u{1F389} The winner takes the $100';
+    } else {
+      fill.classList.remove('unlocked');
+      label.textContent = 'Team goal: ' + total + ' / ' + TEAM_GOAL + ' \u2014 prize unlocks at ' + TEAM_GOAL + '!';
+    }
   }
 
   function getMedal(rank) {
@@ -476,21 +584,15 @@
         '<div class="bar-col"><div class="bar-track"><div class="bar-fill ' + barClass + '" data-pct="' + pct + '"></div></div></div>' +
         '<div class="count">' + r.count + '</div>' +
         '</div>';
-
-      if (rank > 1) {
-        var gap = maxCount - r.count;
-        html += '<div class="nudge">Submit ' + gap + ' more to reach 1st</div>';
-      }
     });
 
     if (reporters.length === 0) {
-      html = '<div class="empty-state">Be the first to log feedback! \u{1F447}<br><a href="https://forms.clickup.com/36750537/f/131h69-76316/A6F5JTI7H098AO092O" target="_blank" rel="noopener" class="cta-btn">Log a bug or feedback \u2192</a></div>';
+      html = '<div class="empty-state">Be the first to log feedback! \u{1F447}<br><a href="https://forms.clickup.com/36750537/f/131h69-76316/A6F5JTI7H098AO092O" target="_blank" rel="noopener" class="cta-btn">Log a bug, issue or idea \u2192</a></div>';
     }
 
     container.innerHTML = html;
     previousRanks = newRanks;
 
-    // Animate bars and rows
     requestAnimationFrame(() => {
       const rows = container.querySelectorAll('.row');
       rows.forEach((row, i) => {
@@ -508,7 +610,6 @@
         }, delay);
       });
 
-      // Fade out arrows after 4s
       setTimeout(() => {
         container.querySelectorAll('[data-arrow]').forEach(a => a.classList.add('fade'));
       }, 4000);
@@ -533,6 +634,7 @@
       const data = await res.json();
 
       animateTotal(data.totalSubmissions);
+      updateTeamProgress(data.totalSubmissions);
       document.getElementById('contributors').textContent = 'logged by ' + data.reporters.length + ' contributors';
       renderRows(data.reporters, isFirstLoad);
       document.getElementById('last-updated').textContent = formatTime(data.updatedAt);
@@ -540,7 +642,7 @@
     } catch (err) {
       console.error('Failed to fetch leaderboard:', err);
       if (isFirstLoad) {
-        document.getElementById('rows').innerHTML = '<div class="empty-state">Be the first to log feedback! \u{1F447}<br><a href="https://forms.clickup.com/36750537/f/131h69-76316/A6F5JTI7H098AO092O" target="_blank" rel="noopener" class="cta-btn">Log a bug or feedback \u2192</a></div>';
+        document.getElementById('rows').innerHTML = '<div class="empty-state">Be the first to log feedback! \u{1F447}<br><a href="https://forms.clickup.com/36750537/f/131h69-76316/A6F5JTI7H098AO092O" target="_blank" rel="noopener" class="cta-btn">Log a bug, issue or idea \u2192</a></div>';
       }
     }
   }
