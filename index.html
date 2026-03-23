@@ -3,7 +3,8 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>1Sugar UAT — Feedback Sprint Leaderboard</title>
+<title>OptiPrime — Feedback Sprint</title>
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16'%3E%3Crect width='16' height='16' rx='2' fill='%231a0a2e'/%3E%3Ctext x='8' y='12' text-anchor='middle' font-family='sans-serif' font-size='10' font-weight='bold' fill='white'%3EOP%3C/text%3E%3C/svg%3E">
 <style>
   * { margin: 0; padding: 0; box-sizing: border-box; }
   body {
@@ -245,15 +246,34 @@
     font-size: 0.75rem;
     color: #5a3d7a;
   }
+  .nudge {
+    font-size: 12px;
+    color: #6b4f8a;
+    padding: 2px 20px 0 96px;
+  }
+  .contributors {
+    font-size: 0.85rem;
+    color: #8a6cb0;
+    margin-top: 2px;
+  }
   .empty-state {
     text-align: center;
     padding: 40px 20px;
     color: #8a6cb0;
   }
+  .empty-state .cta-btn {
+    margin-top: 16px;
+  }
   .loading {
     text-align: center;
     padding: 40px 20px;
     color: #8a6cb0;
+  }
+  .footer-note {
+    text-align: center;
+    font-size: 0.7rem;
+    color: #4a2d6e;
+    padding: 12px 4px 24px;
   }
   .loading-spinner {
     display: inline-block;
@@ -280,6 +300,10 @@
     .medal { min-width: 22px; font-size: 1.1rem; }
     .count { font-size: 0.95rem; min-width: 28px; }
     .cta-btn { padding: 14px 24px; font-size: 1rem; }
+    .nudge { padding-left: 66px; }
+  }
+  @media (max-width: 480px) {
+    .cta-btn { width: 100%; min-height: 48px; display: flex; align-items: center; justify-content: center; }
   }
 </style>
 </head>
@@ -287,10 +311,10 @@
 
 <header>
   <div class="header-left">
-    <h1>1Sugar UAT — Feedback Sprint &#127942;</h1>
+    <h1>OptiPrime — Feedback Sprint &#127942;</h1>
     <div class="live-badge"><span class="live-dot"></span> LIVE</div>
   </div>
-  <div class="prize-badge">&#127873; $100 Amazon voucher — most submissions wins</div>
+  <div class="prize-badge">&#127873; Submit bugs, squash issues, win $100 — every submission counts</div>
 </header>
 
 <div class="main-content">
@@ -308,6 +332,7 @@
     <div class="total-label">Total Submissions</div>
     <div class="total-number" id="total-count">0</div>
     <div class="total-sub">bugs &amp; feedback logged</div>
+    <div class="contributors" id="contributors"></div>
   </div>
 
   <div class="leaderboard" id="leaderboard">
@@ -327,6 +352,8 @@
   <div class="footer">
     Last updated: <span id="last-updated">—</span>
   </div>
+
+  <div class="footer-note">Leaderboard refreshes every 60 seconds &middot; Submissions close Friday 28 March 5pm AEST</div>
 </div>
 
 <script>
@@ -424,10 +451,15 @@
         '<div class="bar-col"><div class="bar-track"><div class="bar-fill ' + barClass + '" data-pct="' + pct + '"></div></div></div>' +
         '<div class="count">' + r.count + '</div>' +
         '</div>';
+
+      if (rank > 1) {
+        var gap = maxCount - r.count;
+        html += '<div class="nudge">Submit ' + gap + ' more to reach 1st</div>';
+      }
     });
 
     if (reporters.length === 0) {
-      html = '<div class="empty-state">No submissions yet. Be the first!</div>';
+      html = '<div class="empty-state">Be the first to log feedback! \u{1F447}<br><a href="https://forms.clickup.com/36750537/f/131h69-76316/A6F5JTI7H098AO092O" target="_blank" rel="noopener" class="cta-btn">Log a bug or feedback \u2192</a></div>';
     }
 
     container.innerHTML = html;
@@ -476,13 +508,14 @@
       const data = await res.json();
 
       animateTotal(data.totalSubmissions);
+      document.getElementById('contributors').textContent = 'logged by ' + data.reporters.length + ' contributors';
       renderRows(data.reporters, isFirstLoad);
       document.getElementById('last-updated').textContent = formatTime(data.updatedAt);
       isFirstLoad = false;
     } catch (err) {
       console.error('Failed to fetch leaderboard:', err);
       if (isFirstLoad) {
-        document.getElementById('rows').innerHTML = '<div class="empty-state">Failed to load data. Retrying&hellip;</div>';
+        document.getElementById('rows').innerHTML = '<div class="empty-state">Be the first to log feedback! \u{1F447}<br><a href="https://forms.clickup.com/36750537/f/131h69-76316/A6F5JTI7H098AO092O" target="_blank" rel="noopener" class="cta-btn">Log a bug or feedback \u2192</a></div>';
       }
     }
   }
