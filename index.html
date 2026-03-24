@@ -700,9 +700,9 @@
       if (!res.ok) throw new Error('API error');
       const data = await res.json();
 
-      animateTotal(data.totalSubmissions);
+      animateTotal(data.participantSubmissions);
       updateTeamProgress(data.participantSubmissions);
-      var totalContributors = data.reporters.length + (data.teamReporters ? data.teamReporters.length : 0);
+      var totalContributors = data.reporters.length;
       document.getElementById('contributors').textContent = 'logged by ' + totalContributors + ' contributors';
       renderRows(data.reporters, isFirstLoad);
       renderTeamRows(data.teamReporters || []);
