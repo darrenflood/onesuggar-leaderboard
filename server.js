@@ -68,11 +68,14 @@ app.get('/api/leaderboard', async (req, res) => {
     const reporters = allReporters.filter(r => !teamSet.has(r.name));
     const teamReporters = allReporters.filter(r => teamSet.has(r.name));
 
-    const totalSubmissions = allReporters.reduce((sum, r) => sum + r.count, 0);
+    const participantSubmissions = reporters.reduce((sum, r) => sum + r.count, 0);
+    const teamSubmissions = teamReporters.reduce((sum, r) => sum + r.count, 0);
 
     res.json({
       updatedAt: new Date().toISOString(),
-      totalSubmissions,
+      totalSubmissions: participantSubmissions + teamSubmissions,
+      participantSubmissions,
+      teamSubmissions,
       reporters,
       teamReporters
     });

@@ -453,9 +453,9 @@
     <ol>
       <li>Submit bugs, issues or ideas via the form below</li>
       <li>The person with the most submissions by Friday 5pm AEST wins an AUD $100 gift voucher</li>
-      <li>The prize only unlocks if the team hits 50 total submissions — so encourage your teammates!</li>
+      <li>The prize only unlocks when participants hit 50 submissions — project team submissions don't count toward this goal</li>
       <li>Only submissions via the OptiPrime feedback form count toward the leaderboard</li>
-      <li>OptiPrime project team members are not eligible for the prize, but their submissions count toward the team goal</li>
+      <li>OptiPrime project team members are not eligible for the prize and their submissions do not count toward the 50-submission goal</li>
     </ol>
     <div class="rules-fine-print">In the event of a tie, the prize goes to whoever reached the tied score first. Prize will be an Amazon or Prezee gift voucher (or equivalent), at the organiser's discretion.</div>
   </div>
@@ -701,7 +701,7 @@
       const data = await res.json();
 
       animateTotal(data.totalSubmissions);
-      updateTeamProgress(data.totalSubmissions);
+      updateTeamProgress(data.participantSubmissions);
       var totalContributors = data.reporters.length + (data.teamReporters ? data.teamReporters.length : 0);
       document.getElementById('contributors').textContent = 'logged by ' + totalContributors + ' contributors';
       renderRows(data.reporters, isFirstLoad);
