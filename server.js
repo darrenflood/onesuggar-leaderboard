@@ -7,6 +7,7 @@ const CLICKUP_TOKEN = process.env.CLICKUP_TOKEN;
 const LIST_ID = '901613834407';
 const REPORTER_FIELD_ID = '750ab6c7-9365-4858-bfee-bf51c69cdbc7';
 const TEAM_MEMBERS = (process.env.TEAM_MEMBERS || '').split(',').map(s => s.trim()).filter(Boolean);
+const COMPETITION_DEADLINE_MS = new Date('2026-03-27T07:00:00Z').getTime(); // 27 March 5PM AEST
 
 app.use((req, res, next) => {
   res.setHeader('X-Content-Type-Options', 'nosniff');
@@ -40,6 +41,12 @@ app.get('/api/leaderboard', async (req, res) => {
       const tasks = data.tasks || [];
 
       for (const task of tasks) {
+        // Skip tasks created after the competition deadline
+        const taskCreated = parseInt(task.date_created, 10);
+        if (taskCreated > COMPETITION_DEADLINE_MS) {
+          continue;
+        }
+
         const customFields = task.custom_fields || [];
         const reporterField = customFields.find(f => f.id === REPORTER_FIELD_ID);
 

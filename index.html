@@ -405,6 +405,52 @@
     margin-bottom: 12px;
   }
   @keyframes spin { to { transform: rotate(360deg); } }
+  .winner-card {
+    display: none;
+    text-align: center;
+    background: linear-gradient(135deg, #2a0a3e 0%, #1a0833 100%);
+    border: 2px solid #F5C542;
+    border-radius: 16px;
+    padding: 32px 24px;
+    margin-bottom: 28px;
+    position: relative;
+    overflow: hidden;
+    box-shadow: 0 0 40px rgba(245, 197, 66, 0.15);
+  }
+  .winner-card.show { display: block; animation: winnerReveal 0.8s ease-out; }
+  @keyframes winnerReveal {
+    from { opacity: 0; transform: scale(0.9) translateY(16px); }
+    to { opacity: 1; transform: scale(1) translateY(0); }
+  }
+  .winner-trophy { font-size: 64px; line-height: 1; margin-bottom: 8px; }
+  .winner-label { font-size: 0.85rem; color: #F5C542; text-transform: uppercase; letter-spacing: 2px; font-weight: 700; margin-bottom: 4px; }
+  .winner-name { font-size: 2rem; font-weight: 900; color: #fff; margin-bottom: 4px; }
+  .winner-count { font-size: 1rem; color: #a78bcc; margin-bottom: 12px; }
+  .winner-prize { font-size: 1.1rem; font-weight: 700; color: #F5C542; }
+  .winner-shimmer {
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: linear-gradient(45deg, transparent 40%, rgba(245, 197, 66, 0.06) 50%, transparent 60%);
+    animation: shimmer 3s ease-in-out infinite;
+    pointer-events: none;
+  }
+  @keyframes shimmer {
+    0% { transform: translateX(-100%) translateY(-100%) rotate(0deg); }
+    100% { transform: translateX(100%) translateY(100%) rotate(0deg); }
+  }
+  .competition-ended-label {
+    text-align: center;
+    font-size: 1rem;
+    font-weight: 700;
+    color: #F5C542;
+    margin-bottom: 16px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+  }
+  .competition-ended-label.hidden { display: none; }
 
   @media (max-width: 600px) {
     header { padding: 14px 16px; }
@@ -444,7 +490,7 @@
     <div class="prize-card">
       <div class="prize-amount">AUD $100</div>
       <div class="prize-label">Gift Voucher</div>
-      <div class="prize-date">Winner announced Friday 28 March at 5pm AEST</div>
+      <div class="prize-date">Winner announced Thursday 27 March at 5pm AEST</div>
     </div>
   </div>
 
@@ -484,6 +530,17 @@
     <div class="contributors" id="contributors"></div>
   </div>
 
+  <div class="winner-card" id="winner-card">
+    <div class="winner-shimmer"></div>
+    <div class="winner-trophy">&#127942;</div>
+    <div class="winner-label">Winner</div>
+    <div class="winner-name" id="winner-name"></div>
+    <div class="winner-count" id="winner-count"></div>
+    <div class="winner-prize">&#127881; Wins the AUD $100 Gift Voucher! &#127881;</div>
+  </div>
+
+  <div class="competition-ended-label hidden" id="ended-label">Competition closed — Final leaderboard</div>
+
   <div class="leaderboard" id="leaderboard">
     <div class="leaderboard-header">
       <span>Leaderboard</span>
@@ -513,19 +570,28 @@
     Last updated: <span id="last-updated">—</span>
   </div>
 
-  <div class="footer-note">Leaderboard refreshes every 60 seconds &middot; Submissions close Friday 28 March 5pm AEST</div>
+  <div class="footer-note">Leaderboard refreshes every 60 seconds &middot; Submissions close Thursday 27 March 5pm AEST</div>
   <div class="powered-by">Powered by <a href="https://www.optimate.me" target="_blank" rel="noopener">Optimate.me</a></div>
 </div>
 
 <script>
 (function() {
-  const DEADLINE = new Date('2026-03-28T06:00:00Z');
+  const DEADLINE = new Date('2026-03-27T07:00:00Z'); // 27 March 5PM AEST (UTC+10)
   const TEAM_GOAL = 50;
+
+  function isCompetitionEnded() {
+    return new Date() >= DEADLINE;
+  }
 
   function updateCountdown() {
     const now = new Date();
     let diff = DEADLINE - now;
-    if (diff < 0) diff = 0;
+    if (diff <= 0) {
+      diff = 0;
+      document.querySelector('.countdown-section').style.display = 'none';
+      document.querySelector('.live-badge').innerHTML = '<span style="color:#F5C542;font-weight:700;">ENDED</span>';
+      return;
+    }
 
     const days = Math.floor(diff / 86400000);
     const hours = Math.floor((diff % 86400000) / 3600000);
@@ -539,6 +605,16 @@
   }
   updateCountdown();
   setInterval(updateCountdown, 1000);
+
+  function showWinner(reporters) {
+    if (!isCompetitionEnded() || reporters.length === 0) return;
+    const winner = reporters[0];
+    document.getElementById('winner-name').textContent = winner.name;
+    document.getElementById('winner-count').textContent = winner.count + ' submissions';
+    document.getElementById('winner-card').classList.add('show');
+    document.getElementById('ended-label').classList.remove('hidden');
+    document.querySelector('.cta-section').style.display = 'none';
+  }
 
   let previousRanks = {};
   let currentTotal = 0;
@@ -706,6 +782,7 @@
       document.getElementById('contributors').textContent = 'logged by ' + totalContributors + ' contributors';
       renderRows(data.reporters, isFirstLoad);
       renderTeamRows(data.teamReporters || []);
+      showWinner(data.reporters);
       document.getElementById('last-updated').textContent = formatTime(data.updatedAt);
       isFirstLoad = false;
     } catch (err) {
